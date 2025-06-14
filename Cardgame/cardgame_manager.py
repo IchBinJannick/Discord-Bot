@@ -1,5 +1,5 @@
 import discord
-from database_manager import CardGameDB
+
 import datetime
 
 class CardGameManager:

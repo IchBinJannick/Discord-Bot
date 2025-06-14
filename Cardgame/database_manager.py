@@ -4,10 +4,23 @@ import os
 import shutil
 
 class CardGameDB:
-    def __init__(self, db_path='..\\databases\\cardgames.db'):
+    def __init__(self, db_path=None):
+        # 1. Pfad-Korrektur mit os.path
+        if db_path is None:
+            base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            db_path = os.path.join(base_dir, 'databases', 'cardgame.db')
+
+        # 2. Verzeichnis automatisch erstellen
+        os.makedirs(os.path.dirname(db_path), exist_ok=True)
+
         self.db_path = db_path
-        self.conn = sqlite3.connect(db_path)
-        self.conn.row_factory = sqlite3.Row
+        try:
+            self.conn = sqlite3.connect(db_path)
+            self.conn.row_factory = sqlite3.Row
+            print(f"Datenbank erfolgreich geöffnet: {db_path}")
+        except sqlite3.Error as e:
+            print(f"KRITISCHER FEHLER: {e}")
+            raise
 
     #game controls
     def start_game(self, player_ids, winning_score=1000, location=None):
